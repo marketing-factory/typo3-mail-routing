@@ -12,6 +12,16 @@ class RouteStyleguideMails
 {
     public function __invoke(BeforeMailerReceivesMailEvent $event): void
     {
+        $message = $event->getMessage();
+        if (!$message instanceof Email) {
+            return;
+        }
+
+        // Do not overwrite an existing X-Mail-Transport header
+        if ($message->getHeaders()->has('X-Mail-Transport')) {
+            return;
+        }
+
         $request = $GLOBALS['TYPO3_REQUEST'];
         $site = $request->getAttribute('site');
 
@@ -24,11 +34,7 @@ class RouteStyleguideMails
             return;
         }
 
-        $message = $event->getMessage();
-        if ($message instanceof Email) {
-            $message->getHeaders()->addHeader('X-Mail-Transport', $chosenMailer);
-        }
-
+        $message->getHeaders()->addHeader('X-Mail-Transport', $chosenMailer);
         $event->setMessage($message);
     }
 }
