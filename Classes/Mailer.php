@@ -46,12 +46,12 @@ class Mailer extends BaseMailer
 
     private function getCustomTransport(string $key): ?TransportInterface
     {
-        if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['mail_routing']['mail_transports'][$key])) {
+        if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['mail_routing']['transports'][$key])) {
             return null;
         }
 
         return $this->getTransportFactory()->get(
-            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['mail_routing']['mail_transports'][$key]
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['mail_routing']['transports'][$key]
         );
     }
 }

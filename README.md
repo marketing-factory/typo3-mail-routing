@@ -29,7 +29,27 @@ composer require mfd/typo3-mail-routing
 
 ## Configuration
 
+The extension is configured through EXTCONF settings that follow the same conventions as TYPO3's mail configuration (`$GLOBALS['TYPO3_CONF_VARS']['MAIL']`). You can configure these settings in your `config/system/additional.php` file:
 
+```php
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['mail_routing'] = [
+    'transports' => [
+        'special_smtp' => [
+            'transport' => 'smtp',
+            'host' => 'smtp.example.org',
+            'port' => 25,
+            // ... other SMTP settings
+        ],
+        'sendmail' => [
+            'transport' => 'sendmail',
+            'command' => '/usr/sbin/sendmail -bs',
+        ],
+    ]
+    // Add more transport configurations as needed
+];
+```
+
+Each transport configuration should match the structure expected by TYPO3's mail system. The `default` key specifies which transport to use when no specific transport is requested.
 
 ## Development
 
@@ -64,4 +84,4 @@ This extension is licensed under GPL-3.0-or-later.
 
 ## Support
 
-For support, please create an issue in the GitHub repository or contact the author directly. 
+For support, please create an issue in the GitHub repository or contact the author directly.
