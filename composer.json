@@ -1,0 +1,49 @@
+{
+  "name": "mfd/typo3-mail-routing",
+  "type": "typo3-cms-extension",
+  "description": "Flexible e-mail transport routing in TYPO3",
+  "license": [
+    "GPL-3.0-or-later"
+  ],
+  "keywords": [
+    "TYPO3",
+    "e-mail",
+    "mailer",
+    "transport",
+    "routing"
+  ],
+  "authors": [
+    {
+      "name": "Christian Spoo",
+      "role": "Developer",
+      "email": "christian.spoo@marketing-factory.de"
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "typo3/cms-core": ">= 13.4.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mfd\\Mail\\Routing\\": "Classes/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "mail_routing"
+    }
+  },
+  "require-dev": {
+    "ssch/typo3-rector": "^3.1",
+    "saschaegerer/phpstan-typo3": "^2.1"
+  },
+  "scripts": {
+    "phpstan": "vendor/bin/phpstan analyse --level=5 --memory-limit=512M --no-progress"
+  }
+}
