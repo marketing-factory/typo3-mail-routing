@@ -1,7 +1,7 @@
 {
   "name": "mfd/typo3-mail-routing",
   "type": "typo3-cms-extension",
-  "description": "Flexible e-mail transport routing in TYPO3",
+  "description": "A TYPO3 CMS extension that enables flexible e-mail transport routing. This extension allows you to control which mail transport is used for sending emails either globally for your entire site or on a per-email basis.",
   "license": [
     "GPL-3.0-or-later"
   ],
