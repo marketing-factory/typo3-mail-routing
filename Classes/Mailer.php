@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mfd\Mail\Routing;
 
 use Mfd\Mail\Routing\Event\BeforeMailerReceivesMailEvent;
@@ -16,42 +18,44 @@ use TYPO3\CMS\Core\Mail\MailerInterface;
 #[AsAlias(MailerInterface::class, public: true)]
 class Mailer extends BaseMailer
 {
+    public const TRANSPORT_HEADER = 'X-Mail-Transport';
+
     public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         $event = new BeforeMailerReceivesMailEvent($message);
-        $this->eventDispatcher->dispatch($event);
+        $this->eventDispatcher?->dispatch($event);
         $message = $event->getMessage();
 
+        $selectedTransport = 'default';
         if ($message instanceof Email) {
-            $selectedTransport = $message->getHeaders()->get('X-Mail-Transport')?->getBody();
+            $headers = $message->getHeaders();
+            $selectedTransport = $headers->get(self::TRANSPORT_HEADER)?->getBodyAsString() ?: 'default';
+            // Internal routing hint, must not leak into the outgoing mail
+            $headers->remove(self::TRANSPORT_HEADER);
         }
 
-        $selectedTransport ??= 'default';
-        if ($selectedTransport === 'default') {
+        $transport = $selectedTransport === 'default' ? null : $this->getCustomTransport($selectedTransport);
+        if (!$transport instanceof TransportInterface) {
             parent::send($message, $envelope);
             return;
         }
 
-        $currentTransport = $this->getTransport();
-        $transport = $this->getCustomTransport($selectedTransport);
-
-        if ($transport instanceof TransportInterface) {
-            $this->transport = $transport;
+        $currentTransport = $this->transport;
+        $this->transport = $transport;
+        try {
             parent::send($message, $envelope);
+        } finally {
             $this->transport = $currentTransport;
-        } else {
-            parent::send($message, $envelope);
         }
     }
 
     private function getCustomTransport(string $key): ?TransportInterface
     {
-        if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['mail_routing']['transports'][$key])) {
+        $settings = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['mail_routing']['transports'][$key] ?? null;
+        if (!is_array($settings)) {
             return null;
         }
 
-        return $this->getTransportFactory()->get(
-            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['mail_routing']['transports'][$key]
-        );
+        return $this->getTransportFactory()->get($settings);
     }
 }

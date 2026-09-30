@@ -1,0 +1,31 @@
+.. role:: php(code)
+   :language: php
+
+.. role:: typoscript(code)
+   :language: typoscript
+
+.. role:: html(code)
+   :language: html
+
+.. role:: xml(code)
+   :language: xml
+
+.. role:: json(code)
+   :language: json
+
+.. role:: bash(code)
+   :language: bash
+
+.. role:: sql(code)
+   :language: sql
+
+.. role:: rst(code)
+   :language: rst
+
+.. role:: none(code)
+   :language: none
+
+.. highlight:: php
+
+.. _Sphinx: https://www.sphinx-doc.org/
+.. _reStructuredText: https://docutils.sourceforge.io/rst.html 

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mfd\Mail\Routing\EventListener;
 
 use Mfd\Mail\Routing\Event\BeforeMailerReceivesMailEvent;
+use Mfd\Mail\Routing\Mailer;
 use Symfony\Component\Mime\Email;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -17,24 +20,22 @@ class RouteStyleguideMails
             return;
         }
 
-        // Do not overwrite an existing X-Mail-Transport header
-        if ($message->getHeaders()->has('X-Mail-Transport')) {
+        // Do not overwrite an existing header
+        if ($message->getHeaders()->has(Mailer::TRANSPORT_HEADER)) {
             return;
         }
 
-        $request = $GLOBALS['TYPO3_REQUEST'];
-        $site = $request->getAttribute('site');
-
+        // No request in CLI context
+        $site = ($GLOBALS['TYPO3_REQUEST'] ?? null)?->getAttribute('site');
         if (!$site instanceof Site) {
             return;
         }
 
         $chosenMailer = $site->getSettings()->get('mailer');
-        if (is_null($chosenMailer)) {
+        if (!is_string($chosenMailer) || $chosenMailer === '') {
             return;
         }
 
-        $message->getHeaders()->addHeader('X-Mail-Transport', $chosenMailer);
-        $event->setMessage($message);
+        $message->getHeaders()->addTextHeader(Mailer::TRANSPORT_HEADER, $chosenMailer);
     }
 }

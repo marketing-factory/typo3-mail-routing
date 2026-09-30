@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mfd\Mail\Routing\Event;
 
 use Symfony\Component\Mime\RawMessage;

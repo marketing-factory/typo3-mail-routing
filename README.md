@@ -13,8 +13,8 @@ A TYPO3 CMS extension that enables flexible e-mail transport routing. This exten
 
 ## Requirements
 
-- PHP 8.1 or higher
-- TYPO3 CMS 13.4.5 or higher
+- PHP 8.2 or higher
+- TYPO3 CMS 13.4.5 or higher, including 14.x
 
 ## Installation
 
@@ -49,7 +49,9 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['mail_routing'] = [
 ];
 ```
 
-Each transport configuration should match the structure expected by TYPO3's mail system. The `default` key specifies which transport to use when no specific transport is requested.
+Each transport configuration should match the structure expected by TYPO3's mail system. The name `default` is reserved and always uses the regular `$GLOBALS['TYPO3_CONF_VARS']['MAIL']` transport, as do unknown names.
+
+Select a transport per e-mail with the `X-Mail-Transport` header (removed before sending), or per site with the site setting `mailer` in `config/sites/<site>/settings.yaml`.
 
 ## Development
 

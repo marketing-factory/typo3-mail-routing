@@ -7,4 +7,4 @@ services:
   Mfd\Mail\Routing\:
     resource: '../Classes/'
     exclude:
-      - '../Classes/Domain/Model/'
+      - '../Classes/Event/'
