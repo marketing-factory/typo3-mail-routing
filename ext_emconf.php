@@ -11,7 +11,7 @@ $EM_CONF['mail_routing'] = [
     'version' => '0.1.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '13.4.5-13.4.99',
+            'typo3' => '13.4.5-14.99.99',
         ],
         'conflicts' => [],
         'suggests' => [],
